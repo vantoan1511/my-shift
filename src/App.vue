@@ -42,16 +42,18 @@ const items = ref([
   {
     label: 'Branch Shifts',
     icon: 'pi pi-calendar-plus',
-    route: '/branch-shifts'
+    route: '/schedule'
   }
 ]);
 </script>
 
 <template>
-  <div>
+  <div class="card">
     <Menubar :model="items">
       <template #start>
-        <span class="text-lg font-bold mr-4">Shift Manager</span>
+        <router-link to="/">
+          <span class="text-lg font-bold mr-4">My Shift</span>
+        </router-link>
       </template>
       <template #item="{item, props}">
         <router-link v-slot="{href, navigate}" :to="item.route" custom>
