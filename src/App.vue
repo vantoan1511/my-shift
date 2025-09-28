@@ -7,6 +7,7 @@ import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {useShiftStore} from "@/stores/Shifts/shift.ts";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 import {useI18n} from "vue-i18n";
+import {useScheduleStore} from "@/stores/schedule.ts";
 
 const {t} = useI18n();
 const PrimeVue = usePrimeVue();
@@ -26,12 +27,14 @@ router.afterEach(() => {
 const branchStore = useBranchStore();
 const employeeStore = useEmployeeStore();
 const shiftStore = useShiftStore();
+const scheduleStore = useScheduleStore();
 
 const exportData = () => {
   const data = {
     branches: branchStore.branches,
     employees: employeeStore.employees,
     shifts: shiftStore.shifts,
+    schedules: scheduleStore.schedules
   };
   const dataStr = JSON.stringify(data, null, 2);
   const blob = new Blob([dataStr], {type: 'application/json'});
@@ -64,6 +67,10 @@ const importData = () => {
         if (data.shifts) {
           shiftStore.shifts = data.shifts;
           localStorage.setItem('shifts', JSON.stringify(data.shifts));
+        }
+        if (data.schedules) {
+          scheduleStore.schedules = data.schedules;
+          localStorage.setItem('schedules', JSON.stringify(data.schedules));
         }
       };
       reader.readAsText(file);
