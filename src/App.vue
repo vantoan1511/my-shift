@@ -2,6 +2,9 @@
 import {usePrimeVue} from "primevue";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+import {useBranchStore} from "@/stores/Branches/branch.ts";
+import {useEmployeeStore} from "@/stores/Employees/employee.ts";
+import {useShiftStore} from "@/stores/Shifts/shift.ts";
 
 const PrimeVue = usePrimeVue();
 const loading = ref(false);
@@ -17,11 +20,54 @@ router.afterEach(() => {
   loading.value = false;
 });
 
-const importData = () => {
-}
+const branchStore = useBranchStore();
+const employeeStore = useEmployeeStore();
+const shiftStore = useShiftStore();
 
 const exportData = () => {
-}
+  const data = {
+    branches: branchStore.branches,
+    employees: employeeStore.employees,
+    shifts: shiftStore.shifts,
+  };
+  const dataStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'shift-manager-data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+const importData = () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = JSON.parse(e.target?.result as string);
+        if (data.branches) {
+          branchStore.branches = data.branches;
+          localStorage.setItem('branches', JSON.stringify(data.branches));
+        }
+        if (data.employees) {
+          employeeStore.employees = data.employees;
+          localStorage.setItem('employees', JSON.stringify(data.employees));
+        }
+        if (data.shifts) {
+          shiftStore.shifts = data.shifts;
+          localStorage.setItem('shifts', JSON.stringify(data.shifts));
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+  input.click();
+};
 
 const items = ref([
   {
