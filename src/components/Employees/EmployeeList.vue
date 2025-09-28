@@ -3,7 +3,9 @@ import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {onMounted, ref} from "vue";
 import type {Employee} from "@/models";
 import EmployeeForm from "@/components/Employees/EmployeeForm.vue";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const employeeStore = useEmployeeStore();
 const showForm = ref(false);
 const selectedEmployee = ref<Employee | null>(null);
@@ -31,16 +33,16 @@ onMounted(() => {
   <Card>
     <template #title>
       <div class="flex justify-between items-center">
-        <h2 class="text-2xl">Employees</h2>
-        <Button icon="pi pi-plus" label="Add Employee" @click="openForm(null)"/>
+        <h2 class="text-2xl">{{ t('employees') }}</h2>
+        <Button icon="pi pi-plus" :label="t('add_employee')" @click="openForm(null)"/>
       </div>
     </template>
     <template #content>
       <DataTable :paginator="true" :rows="10" :value="employeeStore.employees"
                  responsiveLayout="scroll">
-        <Column :sortable="true" field="name" header="Name"></Column>
-        <Column field="phone" header="Phone"></Column>
-        <Column header="Actions" style="width: 10rem">
+        <Column :sortable="true" field="name" :header="t('name')"></Column>
+        <Column field="phone" :header="t('phone')"></Column>
+        <Column :header="t('actions')" style="width: 10rem">
           <template #body="slotProps">
             <div class="flex gap-2">
               <Button class="p-button-rounded p-button-success" icon="pi pi-pencil"
@@ -51,7 +53,7 @@ onMounted(() => {
           </template>
         </Column>
         <template #empty>
-          No employees found.
+          {{ t('no_employees_found') }}
         </template>
       </DataTable>
     </template>

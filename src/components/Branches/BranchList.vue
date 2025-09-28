@@ -3,7 +3,9 @@ import {useBranchStore} from "@/stores/Branches/branch.ts";
 import {onMounted, ref} from "vue";
 import type {Branch} from "@/models";
 import BranchForm from "@/components/Branches/BranchForm.vue";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const branchStore = useBranchStore();
 const showForm = ref(false);
 const selectedBranch = ref<Branch | null>(null);
@@ -31,15 +33,15 @@ onMounted(() => {
   <Card>
     <template #title>
       <div class="flex justify-between items-center">
-        <h2 class="text-2xl">Branches</h2>
-        <Button icon="pi pi-plus" label="Add Branch" @click="openForm(null)"/>
+        <h2 class="text-2xl">{{ t('branches') }}</h2>
+        <Button icon="pi pi-plus" :label="t('add_branch')" @click="openForm(null)"/>
       </div>
     </template>
     <template #content>
       <DataTable :paginator="true" :rows="10" :value="branchStore.branches"
                  responsiveLayout="scroll">
-        <Column :sortable="true" field="name" header="Name"></Column>
-        <Column header="Actions" style="width: 10rem">
+        <Column :sortable="true" field="name" :header="t('name')"></Column>
+        <Column :header="t('actions')" style="width: 10rem">
           <template #body="slotProps">
             <div class="flex gap-2">
               <Button class="p-button-rounded p-button-success" icon="pi pi-pencil"
@@ -50,7 +52,7 @@ onMounted(() => {
           </template>
         </Column>
         <template #empty>
-          No branches found.
+          {{ t('no_branches_found') }}
         </template>
       </DataTable>
     </template>
