@@ -10,6 +10,7 @@ import Aura from '@primeuix/themes/aura';
 import {Ripple} from "primevue";
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
+import i18n from "./i18n";
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -145,4 +146,5 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+app.use(i18n);
 app.mount('#app')

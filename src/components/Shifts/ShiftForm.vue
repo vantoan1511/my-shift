@@ -5,7 +5,9 @@ import {useShiftStore} from "@/stores/Shifts/shift.ts";
 import {ref, watchEffect} from "vue";
 import {useScheduleStore} from "@/stores/schedule.ts";
 import {format, parse} from "date-fns";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const props = defineProps<{ shift: Shift | null, visible: boolean }>();
 const emit = defineEmits(['close']);
 
@@ -19,13 +21,13 @@ const endTime = ref<Date | null>(null);
 const requiredEmployees = ref(1);
 
 const days = ref([
-  {name: 'Monday', code: 'MON'},
-  {name: 'Tuesday', code: 'TUE'},
-  {name: 'Wednesday', code: 'WED'},
-  {name: 'Thursday', code: 'THU'},
-  {name: 'Friday', code: 'FRI'},
-  {name: 'Saturday', code: 'SAT'},
-  {name: 'Sunday', code: 'SUN'}
+  {name: t('monday'), code: 'Monday'},
+  {name: t('tuesday'), code: 'Tuesday'},
+  {name: t('wednesday'), code: 'Wednesday'},
+  {name: t('thursday'), code: 'Thursday'},
+  {name: t('friday'), code: 'Friday'},
+  {name: t('saturday'), code: 'Saturday'},
+  {name: t('sunday'), code: 'Sunday'}
 ]);
 
 watchEffect(() => {
@@ -87,45 +89,45 @@ const handleClose = () => {
 </script>
 
 <template>
-  <Dialog :header="shift ? 'Edit Shift' : 'Add Shift'" :style="{ width: '30rem' }"
+  <Dialog :header="shift ? t('edit_shift') : t('add_shift')" :style="{ width: '30rem' }"
           :visible="props.visible"
           modal
           @update:visible="handleClose">
     <form id="shift-form" @submit.prevent="saveShift">
       <div class="flex flex-col gap-6 mt-4">
         <div class="flex flex-col gap-2">
-          <label for="shiftName">Shift Name</label>
+          <label for="shiftName">{{ t('shift_name') }}</label>
           <InputText id="shiftName" v-model="shiftName" class="w-full" required/>
         </div>
         <div class="flex flex-col gap-2">
-          <label for="dayOfWeek">Day of Week</label>
+          <label for="dayOfWeek">{{ t('day_of_week') }}</label>
           <Select id="dayOfWeek" v-model="dayOfWeek" :highlight-on-select="false" :options="days"
-                  checkmark class="w-full" option-label="name" option-value="name"
+                  checkmark class="w-full" option-label="name" option-value="code"
                   placeholder="Select a day" required/>
         </div>
         <div class="flex flex-col gap-2">
-          <label for="startTime">Start Time</label>
+          <label for="startTime">{{ t('start_time') }}</label>
           <DatePicker id="startTime" v-model="startTime" hour-format="24" required showIcon
                       timeOnly/>
         </div>
         <div class="flex flex-col gap-2">
-          <label for="endTime">End Time</label>
+          <label for="endTime">{{ t('end_time') }}</label>
           <DatePicker id="endTime" v-model="endTime" hour-format="24" required showIcon timeOnly/>
         </div>
         <div class="flex flex-col gap-2">
-          <label for="requiredEmployees">Required Employees</label>
+          <label for="requiredEmployees">{{ t('required_employees') }}</label>
           <InputNumber id="requiredEmployees" v-model="requiredEmployees" :min="1" required/>
         </div>
       </div>
     </form>
     <template #footer>
-      <Button v-if="props.shift" :icon="PrimeIcons.TRASH" label="Delete" severity="danger"
+      <Button v-if="props.shift" :icon="PrimeIcons.TRASH" :label="t('delete')" severity="danger"
               type="button"
               variant="text"
               @click="deleteShift"/>
-      <Button :icon="PrimeIcons.TIMES" label="Cancel" severity="secondary" type="button"
+      <Button :icon="PrimeIcons.TIMES" :label="t('cancel')" severity="secondary" type="button"
               @click="handleClose"/>
-      <Button :icon="PrimeIcons.CHECK" form="shift-form" label="Save" type="submit"/>
+      <Button :icon="PrimeIcons.CHECK" form="shift-form" :label="t('save')" type="submit"/>
     </template>
   </Dialog>
 </template>

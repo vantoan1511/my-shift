@@ -5,6 +5,7 @@ import {useRouter} from "vue-router";
 import {useBranchStore} from "@/stores/Branches/branch.ts";
 import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {useShiftStore} from "@/stores/Shifts/shift.ts";
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 
 const PrimeVue = usePrimeVue();
 const loading = ref(false);
@@ -113,6 +114,7 @@ const items = ref([
         <div class="flex items-center gap-2">
           <Button icon="pi pi-upload" label="Import" text @click="importData"/>
           <Button icon="pi pi-download" label="Export" text @click="exportData"/>
+          <LanguageSwitcher />
         </div>
       </template>
     </Menubar>

@@ -7,7 +7,9 @@ import {useScheduleStore} from "@/stores/schedule.ts";
 import ShiftForm from "@/components/Shifts/ShiftForm.vue";
 import type {SortableEvent} from "vue-draggable-next";
 import {VueDraggableNext} from 'vue-draggable-next';
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const shiftStore = useShiftStore();
 const branchStore = useBranchStore();
 const scheduleStore = useScheduleStore();
@@ -59,12 +61,8 @@ const onShiftOrderChange = (event: {
 }, day: string) => {
   if (event.moved) {
     const shifts = shiftsByDay.value[day];
-    shifts.forEach((shift, index) => {
-      if (shift.order !== index) {
-        const updatedShift = {...shift, order: index};
-        shiftStore.updateShift(updatedShift);
-      }
-    })
+    const updatedShifts = shifts.map((shift, index) => ({...shift, order: index}));
+    shiftStore.updateShifts(updatedShifts);
   }
 };
 
@@ -86,12 +84,12 @@ onMounted(() => {
     <Card>
       <template #title>
         <div class="flex justify-between items-center">
-          <h1 class="text-2xl">Shift Templates</h1>
+          <h1 class="text-2xl">{{ t('shift_templates') }}</h1>
           <div class="flex gap-2">
-            <Button icon="pi pi-check" label="Apply to Branch"
+            <Button icon="pi pi-check" :label="t('apply_to_branch')"
                     severity="success"
                     @click="showApplyToBranchModal = true"/>
-            <Button icon="pi pi-plus" label="Add Shift" @click="openShiftForm(null)"/>
+            <Button icon="pi pi-plus" :label="t('add_shift')" @click="openShiftForm(null)"/>
           </div>
         </div>
       </template>
@@ -99,7 +97,7 @@ onMounted(() => {
         <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
           <div v-for="(shifts, day) in shiftsByDay" :key="day"
                class="p-4 bg-surface-100 rounded-lg">
-            <h2 class="text-lg font-bold mb-2 text-center text-primary">{{ day }}</h2>
+            <h2 class="text-lg font-bold mb-2 text-center text-primary">{{ t(day.toLowerCase()) }}</h2>
             <VueDraggableNext :animation="150" :data-day="day" :group="{ name: 'shifts' }"
                               :list="shifts"
                               class="min-h-[100px] flex flex-col gap-2"
@@ -117,7 +115,7 @@ onMounted(() => {
                 <template #content>
                   <div class="text-sm">
                     <div>{{ shift.startTime }} - {{ shift.endTime }}</div>
-                    <div>Required: {{ shift.requiredEmployees }}</div>
+                    <div>{{ t('required_employees') }}: {{ shift.requiredEmployees }}</div>
                   </div>
                 </template>
               </Card>
@@ -129,17 +127,17 @@ onMounted(() => {
 
     <ShiftForm :shift="selectedShift" :visible="showForm" @close="onFormClose"/>
 
-    <Dialog :style="{ width: '25rem' }" :visible="showApplyToBranchModal" header="Apply to Branch"
+    <Dialog :style="{ width: '25rem' }" :visible="showApplyToBranchModal" :header="t('apply_to_branch')"
             modal pt:mask:class="backdrop-blur-sm">
       <div class="flex items-center gap-2 mb-8">
-        <label for="branch">Branch</label>
+        <label for="branch">{{ t('branch') }}</label>
         <Select v-model="selectedBranchToApply" :options="branchStore.branches"
                 class="w-full" optionLabel="name" optionValue="id"
-                placeholder="Select a branch"/>
+                :placeholder="t('select_a_branch')"/>
       </div>
       <div class="flex justify-end gap-2">
-        <Button label="Cancel" severity="secondary" @click="showApplyToBranchModal = false"/>
-        <Button label="Apply" @click="applyToBranch"/>
+        <Button :label="t('cancel')" severity="secondary" @click="showApplyToBranchModal = false"/>
+        <Button :label="t('apply')" @click="applyToBranch"/>
       </div>
     </Dialog>
   </div>

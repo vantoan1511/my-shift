@@ -25,6 +25,7 @@ declare module 'vue' {
     InputMask: typeof import('primevue/inputmask')['default']
     InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    LanguageSwitcher: typeof import('./src/components/LanguageSwitcher.vue')['default']
     Menubar: typeof import('primevue/menubar')['default']
     ProgressBar: typeof import('primevue/progressbar')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
