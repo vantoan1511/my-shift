@@ -25,6 +25,9 @@ const shiftsByDay = computed(() => {
       shifts[shift.dayOfWeek].push(shift);
     }
   });
+  for (const day in shifts) {
+    shifts[day].sort((a, b) => a.order - b.order);
+  }
   return shifts;
 });
 
@@ -45,8 +48,23 @@ const onDrop = (event: SortableEvent) => {
   if (toDay && shiftId) {
     const shift = shiftStore.shifts.find(s => s.id === shiftId);
     if (shift && shift.dayOfWeek !== toDay) {
-      shiftStore.updateShift({...shift, dayOfWeek: toDay});
+      const newOrder = shiftsByDay.value[toDay].length;
+      shiftStore.updateShift({...shift, dayOfWeek: toDay, order: newOrder});
     }
+  }
+};
+
+const onShiftOrderChange = (event: {
+  moved?: { element: Shift, newIndex: number, oldIndex: number }
+}, day: string) => {
+  if (event.moved) {
+    const shifts = shiftsByDay.value[day];
+    shifts.forEach((shift, index) => {
+      if (shift.order !== index) {
+        const updatedShift = {...shift, order: index};
+        shiftStore.updateShift(updatedShift);
+      }
+    })
   }
 };
 
@@ -82,8 +100,11 @@ onMounted(() => {
           <div v-for="(shifts, day) in shiftsByDay" :key="day"
                class="p-4 bg-surface-100 rounded-lg">
             <h2 class="text-lg font-bold mb-2 text-center text-primary">{{ day }}</h2>
-            <VueDraggableNext :list="shifts" class="min-h-[100px] flex flex-col gap-2"
-                              group="shifts"
+            <VueDraggableNext :animation="150" :data-day="day" :group="{ name: 'shifts' }"
+                              :list="shifts"
+                              class="min-h-[100px] flex flex-col gap-2"
+                              ghost-class="ghost"
+                              @change="(event) => onShiftOrderChange(event, String(day))"
                               @end="onDrop">
               <Card v-for="shift in shifts" :key="shift.id" :data-id="shift.id"
                     class="cursor-pointer"
@@ -125,5 +146,4 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 </style>

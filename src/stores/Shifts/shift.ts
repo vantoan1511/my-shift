@@ -10,8 +10,10 @@ export const useShiftStore = defineStore('shift', {
     async fetchShifts() {
       this.shifts = getShifts();
     },
-    async addShift(shift: Omit<Shift, 'id'>) {
-      const newShift = addShift(shift);
+    async addShift(shift: Omit<Shift, 'id' | 'order'>) {
+      const order = this.shifts.filter(s => s.dayOfWeek === shift.dayOfWeek).length;
+      const newShiftData = {...shift, order};
+      const newShift = addShift(newShiftData);
       this.shifts.push(newShift);
     },
     async updateShift(updatedShift: Shift) {

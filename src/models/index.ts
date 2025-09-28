@@ -17,6 +17,7 @@ export interface Shift {
   startTime: string;
   endTime: string;
   requiredEmployees: number;
+  order: number;
 }
 
 export interface Schedule extends Shift {
