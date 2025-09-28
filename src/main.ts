@@ -8,7 +8,8 @@ import router from './router'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import {Ripple} from "primevue";
-
+import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -142,5 +143,6 @@ app.use(PrimeVue, {
     }
   }
 });
-
+app.use(ToastService);
+app.use(ConfirmationService);
 app.mount('#app')
