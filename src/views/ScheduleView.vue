@@ -249,7 +249,7 @@ onMounted(() => {
           <div class="grid grid-cols-1 md:grid-cols-7 gap-4 bg-surface-100 rounded-lg p-4">
             <div v-for="(shifts, day) in recommendedShiftsByBranchAndDay[branch.id]" :key="day"
                  class="p-4 border-surface-200 rounded-lg">
-              <h2 class="text-lg font-bold mb-2 text-center">{{ t(day.toLowerCase()) }}</h2>
+              <h2 class="text-lg font-bold mb-2 text-center">{{ t(String(day).toLowerCase()) }}</h2>
               <div class="flex flex-col gap-2 min-h-[50px]">
                 <div v-for="shift in shifts" :key="shift.id">
                   <Card>

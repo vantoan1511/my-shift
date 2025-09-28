@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, ref, watchEffect} from "vue";
 import {type SelectChangeEvent, useConfirm, useToast} from "primevue";
-import type {Schedule} from "@/models";
+import type {Schedule, Shift} from "@/models";
 import {useScheduleStore} from "@/stores/schedule.ts";
 import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {useShiftStore} from "@/stores/Shifts/shift.ts";
@@ -221,15 +221,15 @@ const getEmployee = (employeeId: string) => {
 <template>
   <Dialog :header="header" :style="{ width: '40rem' }" :visible="props.visible" modal
           @update:visible="handleClose">
-    <form id="branch-shift-form" @submit.prevent="saveSchedule" class="mb-4">
+    <form id="branch-shift-form" class="mb-4" @submit.prevent="saveSchedule">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
         <!-- Shift Details -->
         <div class="flex flex-col gap-6">
           <div v-if="!props.schedule" class="flex flex-col gap-2">
             <label for="shift">{{ t('shift_templates') }}</label>
-            <Select id="shift" v-model="shiftId" :options="availableShifts" optionLabel="name"
-                    optionValue="id"
-                    :placeholder="t('select_a_shift')" @change="onShiftSelect"/>
+            <Select id="shift" v-model="shiftId" :options="availableShifts" :placeholder="t('select_a_shift')"
+                    optionLabel="name"
+                    optionValue="id" @change="onShiftSelect"/>
           </div>
 
           <div class="flex flex-col gap-2">
@@ -238,8 +238,8 @@ const getEmployee = (employeeId: string) => {
           </div>
           <div class="flex flex-col gap-2">
             <label for="dayOfWeek">{{ t('day_of_week') }}</label>
-            <Select id="dayOfWeek" v-model="dayOfWeek" :options="days" optionLabel="name"
-                    optionValue="code" :placeholder="t('select_a_day')"
+            <Select id="dayOfWeek" v-model="dayOfWeek" :options="days" :placeholder="t('select_a_day')"
+                    optionLabel="name" optionValue="code"
                     required/>
           </div>
           <div class="flex flex-col gap-2">
@@ -267,8 +267,8 @@ const getEmployee = (employeeId: string) => {
             <h3 class="font-bold mb-2">{{ t('assign_employee') }}</h3>
             <div class="flex items-center gap-2">
               <Select v-model="employeeToAssign" :options="getAvailableEmployees"
-                      class="w-full" optionLabel="name"
-                      optionValue="id" :placeholder="t('select_an_employee')"/>
+                      :placeholder="t('select_an_employee')" class="w-full"
+                      optionLabel="name" optionValue="id"/>
               <Button :disabled="!employeeToAssign" icon="pi pi-plus" rounded severity="success"
                       size="small"
                       @click="handleAssignEmployee"/>
@@ -287,7 +287,7 @@ const getEmployee = (employeeId: string) => {
                           size="normal"/>
                   <span class="text-sm">{{ getEmployee(employeeId)?.name }}</span>
                 </div>
-                <Button icon="pi pi-times" severity="danger" size="small" text rounded
+                <Button icon="pi pi-times" rounded severity="danger" size="small" text
                         @click="unassignEmployee(employeeId)"/>
               </div>
               <div v-if="assignedEmployees.length === 0"
@@ -305,7 +305,7 @@ const getEmployee = (employeeId: string) => {
               @click="deleteSchedule"/>
       <div class="flex gap-2">
         <Button :label="t('cancel')" severity="secondary" type="button" @click="handleClose"/>
-        <Button form="branch-shift-form" :label="t('save')" type="submit"/>
+        <Button :label="t('save')" form="branch-shift-form" type="submit"/>
       </div>
     </div>
   </Dialog>
