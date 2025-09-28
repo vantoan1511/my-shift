@@ -41,5 +41,14 @@
   "add_branch": "Thêm chi nhánh",
   "no_branches_found": "Không tìm thấy chi nhánh.",
   "edit_branch": "Sửa chi nhánh",
-  "branch_name": "Tên chi nhánh"
+  "branch_name": "Tên chi nhánh",
+  "import": "Nhập dữ liệu",
+  "export": "Xuất dữ liệu",
+  "assigned": "Đã được giao",
+  "select_a_shift": "Chọn một ca",
+  "select_a_day": "Chọn một ngày",
+  "assign_employee": "Giao nhân viên",
+  "select_an_employee": "Chọn một nhân viên",
+  "assigned_employees": "Nhân viên được giao",
+  "no_employees_assigned": "Chưa có nhân viên nào được giao."
 }

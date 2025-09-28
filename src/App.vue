@@ -6,7 +6,9 @@ import {useBranchStore} from "@/stores/Branches/branch.ts";
 import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {useShiftStore} from "@/stores/Shifts/shift.ts";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
 const PrimeVue = usePrimeVue();
 const loading = ref(false);
 const router = useRouter();
@@ -72,22 +74,22 @@ const importData = () => {
 
 const items = ref([
   {
-    label: 'Branches',
+    label: 'branches',
     icon: 'pi pi-building',
     route: '/branches'
   },
   {
-    label: 'Employees',
+    label: 'employees',
     icon: 'pi pi-users',
     route: '/employees'
   },
   {
-    label: 'Shift Templates',
+    label: 'shift_templates',
     icon: 'pi pi-calendar',
     route: '/shifts'
   },
   {
-    label: 'Branch Shifts',
+    label: 'schedule',
     icon: 'pi pi-calendar-plus',
     route: '/schedule'
   }
@@ -106,15 +108,15 @@ const items = ref([
         <router-link v-slot="{href, navigate}" :to="item.route" custom>
           <a v-ripple :href="href" v-bind="props.action" @click="navigate">
             <span :class="item.icon"/>
-            <span>{{ item.label }}</span>
+            <span>{{ t(item.label as string) }}</span>
           </a>
         </router-link>
       </template>
       <template #end>
         <div class="flex items-center gap-2">
-          <Button icon="pi pi-upload" label="Import" text @click="importData"/>
-          <Button icon="pi pi-download" label="Export" text @click="exportData"/>
-          <LanguageSwitcher />
+          <Button :label="t('import')" icon="pi pi-download" text @click="importData"/>
+          <Button :label="t('export')" icon="pi pi-upload" text @click="exportData"/>
+          <LanguageSwitcher/>
         </div>
       </template>
     </Menubar>

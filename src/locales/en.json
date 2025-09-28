@@ -41,5 +41,8 @@
   "add_branch": "Add Branch",
   "no_branches_found": "No branches found.",
   "edit_branch": "Edit Branch",
-  "branch_name": "Branch Name"
+  "branch_name": "Branch Name",
+  "import": "Import",
+  "export": "Export",
+  "assigned": "Assigned"
 }

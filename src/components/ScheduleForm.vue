@@ -7,7 +7,7 @@ import {useEmployeeStore} from "@/stores/Employees/employee.ts";
 import {useShiftStore} from "@/stores/Shifts/shift.ts";
 import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const props = defineProps<{
   schedule?: Schedule | null,
   visible: boolean,
@@ -40,6 +40,16 @@ const days = ref([
   {name: t('saturday'), code: 'Saturday'},
   {name: t('sunday'), code: 'Sunday'}
 ]);
+
+const availableShifts = computed(() => {
+  const distinctShifts = new Map<string, Shift>();
+  shiftStore.shifts.forEach(shift => {
+    if (!distinctShifts.has(shift.name)) {
+      distinctShifts.set(shift.name, shift);
+    }
+  });
+  return Array.from(distinctShifts.values());
+});
 
 watchEffect(() => {
   if (props.visible) {
@@ -216,8 +226,8 @@ const getEmployee = (employeeId: string) => {
         <!-- Shift Details -->
         <div class="flex flex-col gap-6">
           <div v-if="!props.schedule" class="flex flex-col gap-2">
-            <label for="shift">{{ t('shift') }}</label>
-            <Select id="shift" v-model="shiftId" :options="shiftStore.shifts" optionLabel="name"
+            <label for="shift">{{ t('shift_templates') }}</label>
+            <Select id="shift" v-model="shiftId" :options="availableShifts" optionLabel="name"
                     optionValue="id"
                     :placeholder="t('select_a_shift')" @change="onShiftSelect"/>
           </div>
@@ -265,7 +275,9 @@ const getEmployee = (employeeId: string) => {
             </div>
           </div>
           <div class="flex-grow">
-            <h3 class="font-bold mb-2">{{ t('assigned_employees') }} ({{ assignedEmployees.length }})</h3>
+            <h3 class="font-bold mb-2">{{ t('assigned_employees') }} ({{
+                assignedEmployees.length
+              }})</h3>
             <div
               class="flex flex-col gap-2 p-2 rounded min-h-48 max-h-75 overflow-y-auto bg-surface-100">
               <div v-for="employeeId in assignedEmployees" :key="String(employeeId)"
@@ -288,7 +300,8 @@ const getEmployee = (employeeId: string) => {
       </div>
     </form>
     <div class="flex justify-between">
-      <Button v-if="props.schedule" :label="t('delete')" severity="danger" type="button" variant="outlined"
+      <Button v-if="props.schedule" :label="t('delete')" severity="danger" type="button"
+              variant="outlined"
               @click="deleteSchedule"/>
       <div class="flex gap-2">
         <Button :label="t('cancel')" severity="secondary" type="button" @click="handleClose"/>

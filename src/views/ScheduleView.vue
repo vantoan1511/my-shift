@@ -10,7 +10,7 @@ import {exportBranchShiftsToExcel} from "@/services/exportService.ts";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const branchStore = useBranchStore();
 const branchShiftStore = useScheduleStore();
 const employeeStore = useEmployeeStore();
@@ -167,11 +167,14 @@ onMounted(() => {
           <div class="flex items-center gap-2">
             <Button @click="openNewBranchShiftModal">{{ t('new_shift') }}</Button>
             <Button severity="secondary" @click="exportShifts">{{ t('export_to_excel') }}</Button>
-            <Button severity="contrast" @click="openRecommendationDialog">{{ t('recommendation') }}</Button>
+            <Button severity="contrast" @click="openRecommendationDialog">{{
+                t('recommendation')
+              }}
+            </Button>
             <Select v-model="selectedBranchId" :options="branchStore.branches"
+                    :placeholder="t('select_a_branch')"
                     class="w-full md:w-auto"
-                    optionLabel="name"
-                    optionValue="id" :placeholder="t('select_a_branch')"/>
+                    optionLabel="name" optionValue="id"/>
           </div>
         </div>
       </template>
@@ -184,7 +187,9 @@ onMounted(() => {
     <div v-else class="grid grid-cols-1 md:grid-cols-7 gap-4 bg-surface-100 rounded-lg">
       <div v-for="(shifts, day) in shiftsByDay" :key="day"
            class="p-4 border-surface-200 rounded-lg">
-        <h2 class="text-lg font-bold mb-2 text-center text-primary">{{ t(day.toLowerCase()) }}</h2>
+        <h2 class="text-lg font-bold mb-2 text-center text-primary">
+          {{ t(String(day).toLowerCase()) }}
+        </h2>
         <VueDraggableNext :animation="150" :data-day="day" :group="{ name: 'shifts' }"
                           :list="shifts"
                           class="flex flex-col gap-2 min-h-[50px]"
@@ -208,7 +213,8 @@ onMounted(() => {
                 <div class="flex flex-col gap-2">
                   <Tag
                     :severity="shift.assignedEmployees.length >= shift.requiredEmployees ? 'success' : 'warn'">
-                    {{ shift.assignedEmployees.length }} / {{ shift.requiredEmployees }} Assigned
+                    {{ shift.assignedEmployees.length }} / {{ shift.requiredEmployees }}
+                    {{ t('assigned') }}
                   </Tag>
                   <div v-if="shift.assignedEmployees.length > 0" class="mt-2">
                     <AvatarGroup>
