@@ -129,7 +129,7 @@ const items = ref([
     </Menubar>
     <ProgressBar v-if="loading" mode="indeterminate" style="height: .25em"/>
     <main class="p-4">
-      <RouterView/>
+      <RouterView class=" animate-ease-in-out animate-fadeinleft animate-duration-500"/>
     </main>
     <Toast/>
     <ConfirmDialog/>

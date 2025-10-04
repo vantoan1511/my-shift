@@ -50,5 +50,8 @@
   "assign_employee": "Giao nhân viên",
   "select_an_employee": "Chọn một nhân viên",
   "assigned_employees": "Nhân viên được giao",
-  "no_employees_assigned": "Chưa có nhân viên nào được giao."
+  "no_employees_assigned": "Chưa có nhân viên nào được giao.",
+  "shift_assignment_recommendation": "Gợi ý phân công ca",
+  "accept": "Chấp nhận",
+  "employee_info": "Thông tin nhân viên"
 }

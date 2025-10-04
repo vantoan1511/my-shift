@@ -8,6 +8,7 @@ import ShiftForm from "@/components/Shifts/ShiftForm.vue";
 import type {SortableEvent} from "vue-draggable-next";
 import {VueDraggableNext} from 'vue-draggable-next';
 import {useI18n} from "vue-i18n";
+import {PrimeIcons} from "@primevue/core/api";
 
 const {t} = useI18n();
 const shiftStore = useShiftStore();
@@ -45,13 +46,15 @@ const onFormClose = () => {
 
 const onDrop = (event: SortableEvent) => {
   const toDay = event.to.parentElement?.querySelector('h2')?.textContent;
+  const newDay = (event.to as HTMLElement).dataset.day;
+  const oldDay = (event.from as HTMLElement).dataset.day;
   const shiftId = (event.item as HTMLElement).dataset.id;
 
-  if (toDay && shiftId) {
+  if (toDay && shiftId && newDay && oldDay && newDay !== oldDay) {
     const shift = shiftStore.shifts.find(s => s.id === shiftId);
-    if (shift && shift.dayOfWeek !== toDay) {
-      const newOrder = shiftsByDay.value[toDay].length;
-      shiftStore.updateShift({...shift, dayOfWeek: toDay, order: newOrder});
+    if (shift) {
+      const updatedShift = {...shift, dayOfWeek: newDay, order: shiftsByDay.value[newDay].length};
+      shiftStore.updateShift(updatedShift);
     }
   }
 };
@@ -134,8 +137,9 @@ onMounted(() => {
     <ShiftForm :shift="selectedShift" :visible="showForm" @close="onFormClose"/>
 
     <Dialog :header="t('apply_to_branch')" :style="{ width: '25rem' }"
-            :visible="showApplyToBranchModal"
-            modal pt:mask:class="backdrop-blur-sm">
+            :visible="showApplyToBranchModal" modal
+            pt:mask:class="backdrop-blur-sm"
+            @update:visible="showApplyToBranchModal = false">
       <div class="flex items-center gap-2 mb-8">
         <label for="branch">{{ t('branch') }}</label>
         <Select v-model="selectedBranchToApply" :options="branchStore.branches"
@@ -143,8 +147,9 @@ onMounted(() => {
                 optionValue="id"/>
       </div>
       <div class="flex justify-end gap-2">
-        <Button :label="t('cancel')" severity="secondary" @click="showApplyToBranchModal = false"/>
-        <Button :label="t('apply')" @click="applyToBranch"/>
+        <Button :icon="PrimeIcons.TIMES" :label="t('cancel')" severity="secondary"
+                @click="showApplyToBranchModal = false"/>
+        <Button :icon="PrimeIcons.CHECK" :label="t('apply')" autofocus @click="applyToBranch"/>
       </div>
     </Dialog>
   </div>

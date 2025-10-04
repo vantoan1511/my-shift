@@ -7,7 +7,7 @@ import {useScheduleStore} from "@/stores/schedule.ts";
 import {format, parse} from "date-fns";
 import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const props = defineProps<{ shift: Shift | null, visible: boolean }>();
 const emit = defineEmits(['close']);
 
@@ -107,12 +107,12 @@ const handleClose = () => {
         </div>
         <div class="flex flex-col gap-2">
           <label for="startTime">{{ t('start_time') }}</label>
-          <DatePicker id="startTime" v-model="startTime" hour-format="24" required showIcon
+          <DatePicker id="startTime" v-model="startTime" hour-format="12" required showIcon
                       timeOnly/>
         </div>
         <div class="flex flex-col gap-2">
           <label for="endTime">{{ t('end_time') }}</label>
-          <DatePicker id="endTime" v-model="endTime" hour-format="24" required showIcon timeOnly/>
+          <DatePicker id="endTime" v-model="endTime" hour-format="12" required showIcon timeOnly/>
         </div>
         <div class="flex flex-col gap-2">
           <label for="requiredEmployees">{{ t('required_employees') }}</label>
@@ -127,7 +127,7 @@ const handleClose = () => {
               @click="deleteShift"/>
       <Button :icon="PrimeIcons.TIMES" :label="t('cancel')" severity="secondary" type="button"
               @click="handleClose"/>
-      <Button :icon="PrimeIcons.CHECK" form="shift-form" :label="t('save')" type="submit"/>
+      <Button :icon="PrimeIcons.CHECK" :label="t('save')" form="shift-form" type="submit"/>
     </template>
   </Dialog>
 </template>
