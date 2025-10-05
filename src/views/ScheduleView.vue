@@ -9,6 +9,7 @@ import {generateRecommendations} from "@/services/recommendationService.ts";
 import {exportBranchShiftsToExcel} from "@/services/exportService.ts";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import {useI18n} from "vue-i18n";
+import {PrimeIcons} from "@primevue/core/api";
 
 const {t} = useI18n();
 const branchStore = useBranchStore();
@@ -165,12 +166,12 @@ onMounted(() => {
         <div class="flex justify-between items-center">
           <h1 class="text-2xl">{{ t('schedule') }}</h1>
           <div class="flex items-center gap-2">
-            <Button @click="openNewBranchShiftModal">{{ t('new_shift') }}</Button>
-            <Button severity="secondary" @click="exportShifts">{{ t('export_to_excel') }}</Button>
-            <Button severity="contrast" @click="openRecommendationDialog">{{
-                t('recommendation')
-              }}
-            </Button>
+            <Button :icon="PrimeIcons.PLUS" :label="t('new_shift')" icon-pos="right"
+                    @click="openNewBranchShiftModal"/>
+            <Button :icon="PrimeIcons.FILE_EXPORT" :label="t('export_to_excel')" icon-pos="right"
+                    severity="secondary" @click="exportShifts"/>
+            <Button :label="t('recommendation')" severity="contrast"
+                    @click="openRecommendationDialog"/>
             <Select v-model="selectedBranchId" :options="branchStore.branches"
                     :placeholder="t('select_a_branch')"
                     class="w-full md:w-auto"
@@ -240,9 +241,9 @@ onMounted(() => {
     <ScheduleForm :schedule="selectedBranchShiftToEdit" :visible="showEditBranchShiftModal"
                   @close="onEditBranchShiftModalClose"/>
 
-    <Dialog :visible="showRecommendationDialog" header="Shift Assignment Recommendation" modal
-            style="width: 80vw"
-            @update:visible="closeRecommendationDialog">
+    <Dialog :header="t('shift_assignment_recommendation')" :visible="showRecommendationDialog" modal
+            pt:mask:class="backdrop-blur-sm"
+            style="width: 80vw" @update:visible="closeRecommendationDialog">
       <TabView>
         <TabPanel v-for="branch in branchStore.branches" :key="branch.id" :header="branch.name"
                   :value="branch.id">
@@ -269,15 +270,7 @@ onMounted(() => {
                         <Tag
                           :severity="shift.assignedEmployees.length >= shift.requiredEmployees ? 'success' : 'warn'">
                           {{ shift.assignedEmployees.length }} / {{ shift.requiredEmployees }}
-                          Assigned
                         </Tag>
-                        <div v-if="shift.assignedEmployees.length > 0" class="mt-2">
-                          <AvatarGroup>
-                            <Avatar v-for="employeeId in shift.assignedEmployees" :key="employeeId"
-                                    :label="getEmployeeInitials(employeeId)" shape="circle"
-                                    size="normal"/>
-                          </AvatarGroup>
-                        </div>
                       </div>
                     </template>
                   </Card>
@@ -292,8 +285,8 @@ onMounted(() => {
         </TabPanel>
       </TabView>
       <template #footer>
-        <Button :label="t('cancel')" severity="secondary" @click="closeRecommendationDialog"/>
-        <Button label="Accept" @click="acceptRecommendation"/>
+        <Button :icon="PrimeIcons.TIMES" :label="t('cancel')" severity="secondary" @click="closeRecommendationDialog"/>
+        <Button :icon="PrimeIcons.CHECK" icon-pos="right" :label="t('apply')" @click="acceptRecommendation"/>
       </template>
     </Dialog>
   </div>
